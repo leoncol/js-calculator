@@ -1,15 +1,26 @@
 const buttons = document.querySelectorAll(".button");
 const screentext = document.querySelector(".screentext");
+let displayedNumbers = '';
+let counter = 0;
 
 const pressButton = function(button) {
     button.addEventListener("click", displayNumber);
 };
 
 const displayNumber = function(){
-    console.log('button pressed');
-    screentext.textContent = this.textContent;
+    if (counter < 7){
+        displayedNumbers += this.textContent
+        screentext.textContent = displayedNumbers;
+        counter += 1;
+        console.log(counter);
+    }
+        
+    
+    
+    
     
 };
+
 
 const add = function(num1, num2) {
     return num1 + num2;
