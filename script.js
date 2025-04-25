@@ -30,18 +30,27 @@ const displayNumber = function(){
     if (counter < 7){
         if ((this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = ')
         && (upperDisplayedNumbers.indexOf('+') == -1 && upperDisplayedNumbers.indexOf('-') == -1 
-        && upperDisplayedNumbers.indexOf('÷') == -1 && upperDisplayedNumbers.indexOf('x') == -1 && upperDisplayedNumbers.indexOf('=') == -1)){
-            displayedNumbers += this.textContent
-            screentext.textContent = displayedNumbers;
-            counter += 1;
-            val1 = parseInt(displayedNumbers);
+        && upperDisplayedNumbers.indexOf('÷') == -1 && upperDisplayedNumbers.indexOf('x') == -1 && upperDisplayedNumbers.indexOf('=') == -1
+        )){
+            if (upperDisplayedNumbers.indexOf(".") == -1){
+                displayedNumbers += this.textContent
+                screentext.textContent = displayedNumbers;
+                counter += 1;
+                val1 = displayedNumbers;
+            } else if (upperDisplayedNumbers.indexOf(".") >= 0 && this.textContent != '.'){
+                displayedNumbers += this.textContent
+                screentext.textContent = displayedNumbers;
+                counter += 1;
+                val1 = displayedNumbers;
+            }
+            
         } if (upperDisplayedNumbers.indexOf('+') >= 0 || upperDisplayedNumbers.indexOf('-') >= 0 
         || upperDisplayedNumbers.indexOf('÷') >= 0 || upperDisplayedNumbers.indexOf('x') >= 0 || upperDisplayedNumbers.indexOf('=') >= 0){
             if (this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = '){
                     displayedNumbers2 += this.textContent
                     screentext.textContent = displayedNumbers2
                     upperDisplayedNumbers += this.textContent
-                    val2 = parseInt(displayedNumbers2);
+                    val2 = displayedNumbers2;
                     counter += 1;
                     
                    
@@ -54,6 +63,8 @@ const displayNumber = function(){
     
 }
 
+
+
 const equalitySymbolOperate = function() {
     if ((this.textContent == ' = ') && (val2 != 0)){
         upperDisplayedNumbers += this.textContent
@@ -62,9 +73,9 @@ const equalitySymbolOperate = function() {
         if (upperDisplayedNumbers.indexOf(' + ') >= 0){
             result = add(val1, val2);
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -74,9 +85,9 @@ const equalitySymbolOperate = function() {
         } else if (upperDisplayedNumbers.indexOf(' - ') >= 0){
             result = substract(val1, val2)
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -86,9 +97,9 @@ const equalitySymbolOperate = function() {
         } else if (upperDisplayedNumbers.indexOf(' x ') >= 0){
             result = multiply(val1, val2);
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -98,9 +109,9 @@ const equalitySymbolOperate = function() {
         } else if (upperDisplayedNumbers.indexOf(' ÷ ') >= 0){
             result = divide(val1, val2);
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
                
             } else {
@@ -120,9 +131,9 @@ const operatorsOperate = function() {
         && (upperDisplayedNumbers.indexOf(' ÷ ') == -1)){
             result = add(val1, val2);
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 upperDisplayedNumbers = result + ' + ';
@@ -136,9 +147,9 @@ const operatorsOperate = function() {
             && (upperDisplayedNumbers.indexOf(' ÷ ') == -1)){
             result = substract(val1, val2);
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 upperDisplayedNumbers = result + ' - ';
@@ -152,9 +163,9 @@ const operatorsOperate = function() {
             && (upperDisplayedNumbers.indexOf(' ÷ ') == -1)){
             result = multiply(val1, val2);
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 upperDisplayedNumbers = result + ' x ';
@@ -168,9 +179,9 @@ const operatorsOperate = function() {
             && (upperDisplayedNumbers.indexOf(' x ') == -1)){
             result = divide(val1, val2);
             result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 upperDisplayedNumbers = result + ' ÷ ';
@@ -192,9 +203,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = substract(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -208,9 +219,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = multiply(val1, val2)
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -224,9 +235,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = divide(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -242,9 +253,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = add(val1, val2)
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -258,9 +269,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = multiply(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -274,9 +285,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = divide(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -293,9 +304,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = add(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -309,9 +320,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = substract(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -325,9 +336,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = divide(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -343,9 +354,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = add(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -359,9 +370,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = substract(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -375,9 +386,9 @@ const operatorsOperate = function() {
                 counter += 1;
                 result = multiply(val1, val2);
                 result = checkDecimal(result);
-            if (result > 9999999){
+            if (result > 9999999 || result < -9999){
                 screentext.className = 'message';
-                screentext.textContent = 'VALUE IS TOO HIGH, INSERT A NEW NUMBER OR RESET';
+                screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
             } else {
                 screentext.textContent = result;
@@ -423,7 +434,7 @@ const operateResult = function(){
     if (screentext.textContent == result){
         if (this.textContent == ' + ' || this.textContent == ' - ' || this.textContent == ' x ' || this.textContent == ' ÷ '){
             upperDisplayedNumbers = result + this.textContent;
-            upperscreen.textContent = upperDisplayedNumbers
+            upperscreen.textContent = upperDisplayedNumbers;
             val1 = result;
             val2 = 0;
             if (this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = '){
@@ -437,12 +448,21 @@ const operateResult = function(){
 
 const upperDisplayNumber = function(){
     if (upperCounter < 9){
-        if ((upperDisplayedNumbers.indexOf(' + ') == -1) && (this.textContent != ' + ') && (upperDisplayedNumbers.indexOf(' - ') == -1) && (this.textContent != " - ")
-        && (upperDisplayedNumbers.indexOf(' ÷ ') == -1) && (this.textContent != ' ÷ ') && (upperDisplayedNumbers.indexOf(' x ') == -1) && (this.textContent != " x ") && (upperDisplayedNumbers.indexOf(' = ') == -1)){
-        upperDisplayedNumbers += this.textContent
-        upperscreen.textContent = upperDisplayedNumbers;
-        upperCounter += 1;
-        }
+        if ((upperDisplayedNumbers.indexOf('+') == -1) && (this.textContent != ' + ') && (upperDisplayedNumbers.indexOf('-') == -1) && (this.textContent != " - ")
+        && (upperDisplayedNumbers.indexOf('÷') == -1) && (this.textContent != ' ÷ ') && (upperDisplayedNumbers.indexOf('x') == -1) && (this.textContent != " x ")
+     && (upperDisplayedNumbers.indexOf('=') == -1)){
+            if (upperDisplayedNumbers.indexOf(".") == -1){
+                upperDisplayedNumbers += this.textContent
+                upperscreen.textContent = upperDisplayedNumbers;
+                upperCounter += 1;
+            } else if (upperDisplayedNumbers.indexOf(".") >= 0 && this.textContent != '.'){
+                upperDisplayedNumbers += this.textContent
+                upperscreen.textContent = upperDisplayedNumbers;
+                upperCounter += 1;
+            }
+            
+        
+            }
         
     }
     
@@ -465,6 +485,8 @@ const checkDecimal = function(number) {
 }
     
 }
+
+
 
 
 
