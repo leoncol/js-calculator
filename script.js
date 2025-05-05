@@ -8,7 +8,7 @@ let displayResult = '';
 let counter = 0;
 let upperCounter = 0;
 let val1 = 0;
-let val2 = '';
+let val2 = 0;
 let symbol = '';
 let result = 0;
 screentext.textContent = val1;
@@ -29,13 +29,13 @@ const pressButton = function(button) {
 };
 
 const displayNumber = function(){
-    if (counter < 10 && displayedNumbers != '0'){
+    if (counter < 10){
         if ((this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = ')
         && (upperDisplayedNumbers.indexOf('+') == -1 && upperDisplayedNumbers.indexOf('-') == -1 
         && upperDisplayedNumbers.indexOf('÷') == -1 && upperDisplayedNumbers.indexOf('x') == -1 && upperDisplayedNumbers.indexOf('=') == -1
         ) && displayedNumbers2 == 0){
             screentext.className = 'screentext';
-            if (this.textContent != '.'){
+            if (this.textContent != '.' && this.textContent != 0){
                 displayedNumbers += this.textContent
                 screentext.textContent = displayedNumbers;
                 counter += 1;
@@ -49,18 +49,33 @@ const displayNumber = function(){
             
         } if (upperDisplayedNumbers.indexOf('+') >= 0 || upperDisplayedNumbers.indexOf('-') >= 0 
         || upperDisplayedNumbers.indexOf('÷') >= 0 || upperDisplayedNumbers.indexOf('x') >= 0 || upperDisplayedNumbers.indexOf('=') >= 0){
-            screentext.className = 'screentext';
+            if (val2 == 0 && this.textContent == 0){
+                screentext.className = 'screentext';
+                screentext.textContent = val2;
+                upperDisplayedNumbers += val2;
+            };
             if (this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = '){
                 if (this.textContent != '.'){
-                    displayedNumbers2 += this.textContent
-                    screentext.textContent = displayedNumbers2
-                    upperDisplayedNumbers += this.textContent
-                    val2 = parseFloat(displayedNumbers2);
-                    counter += 1;
+                    if (val2 == 0 && screentext.textContent == 0){
+                        displayedNumbers2 = this.textContent
+                        screentext.textContent = displayedNumbers2
+                        upperDisplayedNumbers += this.textContent
+                        val2 = parseFloat(displayedNumbers2);
+                        counter += 1;
+                    } else {
+                        displayedNumbers2 += this.textContent
+                        screentext.textContent = displayedNumbers2
+                        upperDisplayedNumbers += this.textContent
+                        val2 = parseFloat(displayedNumbers2);
+                        counter += 1;
+                    }
+                    
                     if (upperDisplayedNumbers.indexOf(' = ') >= 0 && upperDisplayedNumbers.length >= 5){
                         upperscreen.textContent = '';
-                        val1 = displayedNumbers2;
-                        result = 0; 
+                        val1 = parseFloat(displayedNumbers2);
+                        result = 0;
+                        val2 = 0;
+                        
                         
                     }
                 } else if (this.textContent == '.' && displayedNumbers2.indexOf(".") == -1 && displayedNumbers2 != ''){
@@ -72,8 +87,10 @@ const displayNumber = function(){
                     if (upperDisplayedNumbers.indexOf(' = ') >= 0 && upperDisplayedNumbers.length >= 5){
                         upperscreen.textContent = '';
                         
-                        val1 = displayedNumbers2;
+                        val1 = parseFloat(displayedNumbers2);
                         result = 0;
+                        val2 = 0;
+                        
                     }
                 }; 
                     
@@ -94,7 +111,7 @@ const equalitySymbolOperate = function() {
     
     if ((this.textContent == ' = ') && (upperDisplayedNumbers.indexOf('=') == -1) && (upperDisplayedNumbers.indexOf(' + ') >= 0 || 
     upperDisplayedNumbers.indexOf(' - ') >= 0 || upperDisplayedNumbers.indexOf(' x ') >= 0 ||upperDisplayedNumbers.indexOf(' ÷ ') >= 0) &&
-    upperDisplayedNumbers.length >= 5 && val1 != screentext.textContent){
+    upperDisplayedNumbers.length >= 5){
 
         
         if (upperDisplayedNumbers.indexOf(' + ') >= 0){
@@ -113,7 +130,7 @@ const equalitySymbolOperate = function() {
             }
             displayedNumbers2 = '';
             counter = 0;
-            val2 = '';
+            val2 = 0;
             
             
             
@@ -133,7 +150,7 @@ const equalitySymbolOperate = function() {
             }
             displayedNumbers2 = '';
             counter = 0;
-            val2 = '';
+            val2 = 0;
             
         } else if (upperDisplayedNumbers.indexOf(' x ') >= 0){
             upperDisplayedNumbers += this.textContent
@@ -145,7 +162,7 @@ const equalitySymbolOperate = function() {
                 val1 = 0;
                 displayedNumbers2 = '';
                 counter = 0;
-                val2 = '';
+                val2 = 0;
             } else {
                 result = checkDecimal(result);
                 if (result > 9999999999 || result < -9999999999){
@@ -158,7 +175,7 @@ const equalitySymbolOperate = function() {
                 }
                 displayedNumbers2 = '';
                 counter = 0;
-                val2 = '';
+                val2 = 0;
             }
             
             
@@ -181,7 +198,7 @@ const equalitySymbolOperate = function() {
             }
             displayedNumbers2 = '';
             counter = 0;
-            val2 = '';
+            val2 = 0;
             
         } else {
             screentext.className = 'message';
@@ -193,7 +210,7 @@ const equalitySymbolOperate = function() {
             result = 0;
             upperDisplayedNumbers = '';
             displayedNumbers = '';
-            val2 = '';
+            val2 = 0;
         }
             }
             
@@ -201,9 +218,10 @@ const equalitySymbolOperate = function() {
 }
 
 const operatorsOperate = function() {
-    if ((upperDisplayedNumbers.indexOf(' = ') == -1 && screentext.textContent != "Can't divide by zero" )){
+    if (upperDisplayedNumbers.indexOf(' = ') == -1 && screentext.textContent != "Can't divide by zero"){
         if ((this.textContent == ' + ') && (upperDisplayedNumbers.indexOf(' - ') == -1) && (upperDisplayedNumbers.indexOf(' x ') == -1)
         && (upperDisplayedNumbers.indexOf(' ÷ ') == -1)){
+            
             result = add(val1, val2);
             result = checkDecimal(result);
             if (result > 9999999999 || result < -9999999999){
@@ -217,7 +235,7 @@ const operatorsOperate = function() {
                 val1 = result;
             }
             displayedNumbers2 = '';
-            val2 = '';
+            val2 = 0;
             counter = 0;
         } else if ((this.textContent == ' - ') && (upperDisplayedNumbers.indexOf(' + ') == -1) && (upperDisplayedNumbers.indexOf(' x ') == -1)
             && (upperDisplayedNumbers.indexOf(' ÷ ') == -1)){
@@ -234,7 +252,7 @@ const operatorsOperate = function() {
                 val1 = result;
             }
             displayedNumbers2 = '';
-            val2 = '';
+            val2 = 0;
             counter = 0;
         } else if ((this.textContent == ' x ') && (upperDisplayedNumbers.indexOf(' - ') == -1) && (upperDisplayedNumbers.indexOf(' + ') == -1)
             && (upperDisplayedNumbers.indexOf(' ÷ ') == -1)){
@@ -261,7 +279,7 @@ const operatorsOperate = function() {
                     val1 = result;
                 }
                 displayedNumbers2 = '';
-                val2 = '';
+                val2 = 0;
                 counter = 0;
             }
             
@@ -292,7 +310,7 @@ const operatorsOperate = function() {
                     val1 = result;
                 }
                     displayedNumbers2 = '';
-                    val2 = '';
+                    val2 = 0;
                     counter = 0;
             }
             
@@ -304,11 +322,7 @@ const operatorsOperate = function() {
     
  const differentSymbolOperate = function(){
     if (upperDisplayedNumbers.indexOf(' = ') == -1){
-        if (val1 == val2 && val1 == 0 && upperDisplayedNumbers.indexOf("0") >= 0){
-            upperDisplayedNumbers = val1 + this.textContent;
-            screentext.textContent = val1;
-            upperscreen.textContent = upperDisplayedNumbers;
-        } else if (val1 != val2){
+        
             if (this.textContent == ' + ' && upperDisplayedNumbers.indexOf(' + ') == -1){
                 if (upperDisplayedNumbers.indexOf(' - ') >= 0){
                     counter += 1;
@@ -634,7 +648,7 @@ const operatorsOperate = function() {
         }
     }
     
-}    
+
     
 
 
@@ -645,6 +659,7 @@ const operateResult = function(){
             upperscreen.textContent = upperDisplayedNumbers;
             val2 = 0;
             result = 0;
+            displayedNumbers2 = '';
             if (this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = '){
                 screentext.textContent = this.textContent
             }
@@ -712,7 +727,7 @@ const checkDecimal = function(number) {
                 displayResult = '';
                 counter = 0;
                 upperCounter = 0;
-                val2 = '';
+                val2 = 0;
                 symbol = '';
                 result = 0;
                 upperDisplayedNumbers = '';
@@ -725,7 +740,7 @@ const checkDecimal = function(number) {
                 displayResult = '';
                 counter = 0;
                 upperCounter = 0;
-                val2 = '';
+                val2 = 0;
                 symbol = '';
                 result = 0;
                 upperDisplayedNumbers = '';
