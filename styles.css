@@ -72,6 +72,16 @@ justify-content: end;
 
 }
 
+#deleteButton {
+    background-color: white;
+    margin: 0;
+    opacity: 1;
+    border-radius: 25px;
+    height: 80px;
+    width: 80px;
+    cursor: pointer;
+}
+
 #equal{
 justify-content: center;
 padding-bottom: 319px;

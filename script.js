@@ -1,16 +1,20 @@
 const buttons = document.querySelectorAll(".button");
 const screentext = document.querySelector(".screentext");
 const upperscreen = document.querySelector(".upperscreen");
-let displayedNumbers = '';
-let displayedNumbers2 = '';
-let upperDisplayedNumbers = '';
-let displayResult = '';
-let counter = 0;
-let upperCounter = 0;
-let val1 = 0;
-let val2 = 0;
-let symbol = '';
-let result = 0;
+const deleteButton = document.querySelector("#deleteButton");
+
+
+
+displayedNumbers = '';
+displayedNumbers2 = '';
+upperDisplayedNumbers = '';
+displayResult = '';
+counter = 0;
+upperCounter = 0;
+val1 = 0;
+val2 = 0;
+symbol = '';
+result = 0;
 screentext.textContent = val1;
 
 
@@ -27,6 +31,9 @@ const pressButton = function(button) {
 
 
 };
+
+
+
 
 const displayNumber = function(){
     if (counter < 10){
@@ -45,18 +52,23 @@ const displayNumber = function(){
                 screentext.textContent = displayedNumbers;
                 counter += 1;
                 val1 = parseFloat(displayedNumbers);
-            } 
+            } else if (this.textContent == '.' && displayedNumbers.indexOf(".") == -1 && val1 == 0){
+                displayedNumbers = 0;
+                displayedNumbers += this.textContent
+                screentext.textContent = displayedNumbers;
+                counter += 1;
+                val1 = parseFloat(displayedNumbers);
+            };
             
         } if (upperDisplayedNumbers.indexOf('+') >= 0 || upperDisplayedNumbers.indexOf('-') >= 0 
         || upperDisplayedNumbers.indexOf('÷') >= 0 || upperDisplayedNumbers.indexOf('x') >= 0 || upperDisplayedNumbers.indexOf('=') >= 0){
+            screentext.className = 'screentext';
             if (val2 == 0 && this.textContent == 0){
-                screentext.className = 'screentext';
                 screentext.textContent = val2;
                 upperDisplayedNumbers += val2;
-            };
-            if (this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = '){
+            } else if (this.textContent != ' + ' && this.textContent != ' - ' && this.textContent != ' ÷ ' && this.textContent != ' x ' && this.textContent != ' = '){
                 if (this.textContent != '.'){
-                    if (val2 == 0 && screentext.textContent == 0){
+                    if (val2 == 0 && screentext.textContent == 0 && displayedNumbers2.indexOf(".") == -1){
                         displayedNumbers2 = this.textContent
                         screentext.textContent = displayedNumbers2
                         upperDisplayedNumbers += this.textContent
@@ -92,9 +104,23 @@ const displayNumber = function(){
                         val2 = 0;
                         
                     }
-                }; 
+                } else if (this.textContent == '.' && displayedNumbers2.indexOf(".") == -1 && val2 == 0){
+                    displayedNumbers2 = 0;
+                    displayedNumbers2 += this.textContent;
+                    screentext.textContent = displayedNumbers2;
+                    upperDisplayedNumbers += this.textContent;
+                    val2 = parseFloat(displayedNumbers2);
+                    counter += 1;
+                    if (upperDisplayedNumbers.indexOf(' = ') >= 0 && upperDisplayedNumbers.length >= 5){
+                        upperscreen.textContent = '';
+                        
+                        val1 = parseFloat(displayedNumbers2);
+                        result = 0;
+                        val2 = 0;
+                        
+                    }
                     
-                    
+                }
                    
                    
 
@@ -124,6 +150,10 @@ const equalitySymbolOperate = function() {
                 screentext.className = 'message';
                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
+                val1 = 0;
+                result = 0;
+                upperDisplayedNumbers = '';
+                displayedNumbers = '';
             } else {
                 screentext.textContent = result;
                 val1 = result;
@@ -131,6 +161,7 @@ const equalitySymbolOperate = function() {
             displayedNumbers2 = '';
             counter = 0;
             val2 = 0;
+            
             
             
             
@@ -144,6 +175,10 @@ const equalitySymbolOperate = function() {
                 screentext.className = 'message';
                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
+                val1 = 0;
+                result = 0;
+                upperDisplayedNumbers = '';
+                displayedNumbers = '';
             } else {
                 screentext.textContent = result;
                 val1 = result;
@@ -169,6 +204,10 @@ const equalitySymbolOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     screentext.textContent = result;
                     val1 = result;
@@ -191,6 +230,10 @@ const equalitySymbolOperate = function() {
                 screentext.className = 'message';
                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
+                val1 = 0;
+                result = 0;
+                upperDisplayedNumbers = '';
+                displayedNumbers = '';
                
             } else {
                 screentext.textContent = result;
@@ -228,6 +271,10 @@ const operatorsOperate = function() {
                 screentext.className = 'message';
                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
+                val1 = 0;
+                result = 0;
+                upperDisplayedNumbers = '';
+                displayedNumbers = '';
             } else {
                 upperDisplayedNumbers = result + ' + ';
                 upperscreen.textContent = upperDisplayedNumbers;
@@ -245,6 +292,10 @@ const operatorsOperate = function() {
                 screentext.className = 'message';
                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                 upperscreen.textContent = '';
+                val1 = 0;
+                result = 0;
+                upperDisplayedNumbers = '';
+                displayedNumbers = '';
             } else {
                 upperDisplayedNumbers = result + ' - ';
                 upperscreen.textContent = upperDisplayedNumbers;
@@ -272,6 +323,10 @@ const operatorsOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     upperDisplayedNumbers = result + ' x ';
                     upperscreen.textContent = upperDisplayedNumbers;
@@ -303,6 +358,10 @@ const operatorsOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     upperDisplayedNumbers = result + ' ÷ ';
                     upperscreen.textContent = upperDisplayedNumbers;
@@ -332,6 +391,10 @@ const operatorsOperate = function() {
                         screentext.className = 'message';
                         screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                         upperscreen.textContent = '';
+                        val1 = 0;
+                        result = 0;
+                        upperDisplayedNumbers = '';
+                        displayedNumbers = '';
                     } else {
                         screentext.textContent = result;
                         upperDisplayedNumbers = result + this.textContent;
@@ -358,8 +421,6 @@ const operatorsOperate = function() {
                             screentext.className = 'message';
                             screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                             upperscreen.textContent = '';
-                            displayedNumbers2 = '';
-                            counter = 0;
                             val1 = 0;
                             result = 0;
                             upperDisplayedNumbers = '';
@@ -394,8 +455,6 @@ const operatorsOperate = function() {
                                 screentext.className = 'message';
                                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                                 upperscreen.textContent = '';
-                                displayedNumbers2 = '';
-                                counter = 0;
                                 val1 = 0;
                                 result = 0;
                                 upperDisplayedNumbers = '';
@@ -423,6 +482,10 @@ const operatorsOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     screentext.textContent = result;
                     upperDisplayedNumbers = result + this.textContent;
@@ -449,9 +512,6 @@ const operatorsOperate = function() {
                             screentext.className = 'message';
                             screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                             upperscreen.textContent = '';
-                            upperscreen.textContent = '';
-                            displayedNumbers2 = '';
-                            counter = 0;
                             val1 = 0;
                             result = 0;
                             upperDisplayedNumbers = '';
@@ -485,8 +545,6 @@ const operatorsOperate = function() {
                                 screentext.className = 'message';
                                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                                 upperscreen.textContent = '';
-                                displayedNumbers2 = '';
-                                counter = 0;
                                 val1 = 0;
                                 result = 0;
                                 upperDisplayedNumbers = '';
@@ -512,6 +570,10 @@ const operatorsOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     screentext.textContent = result;
                     upperDisplayedNumbers = result + this.textContent;
@@ -529,6 +591,10 @@ const operatorsOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     screentext.textContent = result;
                     upperDisplayedNumbers = result + this.textContent;
@@ -557,8 +623,6 @@ const operatorsOperate = function() {
                                 screentext.className = 'message';
                                 screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                                 upperscreen.textContent = '';
-                                displayedNumbers2 = '';
-                                counter = 0;
                                 val1 = 0;
                                 result = 0;
                                 upperDisplayedNumbers = '';
@@ -583,6 +647,10 @@ const operatorsOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     screentext.textContent = result;
                     upperDisplayedNumbers = result + this.textContent;
@@ -600,6 +668,10 @@ const operatorsOperate = function() {
                     screentext.className = 'message';
                     screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                     upperscreen.textContent = '';
+                    val1 = 0;
+                    result = 0;
+                    upperDisplayedNumbers = '';
+                    displayedNumbers = '';
                 } else {
                     screentext.textContent = result;
                     upperDisplayedNumbers = result + this.textContent;
@@ -626,8 +698,6 @@ const operatorsOperate = function() {
                             screentext.className = 'message';
                             screentext.textContent = 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET';
                             upperscreen.textContent = '';
-                            displayedNumbers2 = '';
-                            counter = 0;
                             val1 = 0;
                             result = 0;
                             upperDisplayedNumbers = '';
@@ -695,8 +765,8 @@ const upperDisplayNumber = function(){
 
 const checkDecimal = function(number) {
     if (Number.isInteger(number) == false){
-        let stringNumber = number.toString();
-        let splitNumber = stringNumber.split(".");
+             stringNumber = number.toString();
+             splitNumber = stringNumber.split(".");
 
         if (splitNumber[0].length >= 1){
             return parseFloat(Number.parseFloat(number).toFixed(1));
@@ -710,12 +780,9 @@ const checkDecimal = function(number) {
 }
 
  const addEqual = function(){
-    if (result == 0 && this.textContent == " = " && screentext.textContent != "Can't divide by zero" && upperDisplayedNumbers.indexOf(0) == -1){
-        if (upperDisplayedNumbers.indexOf('+') >= 0 || upperDisplayedNumbers.indexOf('-') >= 0 
-        || upperDisplayedNumbers.indexOf('÷') >= 0 || upperDisplayedNumbers.indexOf('x') >= 0){
-            upperscreen.textContent = upperDisplayedNumbers;
+    if (result == 0 && this.textContent == " = " && screentext.textContent != "Can't divide by zero" && screentext.textContent != 'VALUE IS TOO HIGH/LOW, INSERT A NEW NUMBER OR RESET' 
+        && upperDisplayedNumbers.indexOf(0) == -1){
             upperDisplayedNumbers = '';
-        }
         if (upperDisplayedNumbers.indexOf('+') == -1 && upperDisplayedNumbers.indexOf('-') == -1 
         && upperDisplayedNumbers.indexOf('÷') == -1 && upperDisplayedNumbers.indexOf('x') == -1){
             if (screentext.textContent == ''){
@@ -754,7 +821,22 @@ const checkDecimal = function(number) {
 }
 
 
+const clearScreen = function() {
+     displayedNumbers = '';
+     displayedNumbers2 = '';
+     upperDisplayedNumbers = '';
+     displayResult = '';
+     counter = 0;
+     upperCounter = 0;
+     val1 = 0;
+     val2 = 0;
+     symbol = '';
+     result = 0;
+screentext.textContent = val1;
+upperscreen.textContent = upperDisplayedNumbers;
+screentext.className = 'screentext';
 
+};
 
 
 const add = function(num1, num2) {
@@ -797,4 +879,7 @@ const operate = function(num1, operator, num2){
     }
 }
 
+
+
 buttons.forEach(pressButton);
+deleteButton.addEventListener("click", clearScreen);
