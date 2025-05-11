@@ -42,11 +42,23 @@ const displayNumber = function(){
         && upperDisplayedNumbers.indexOf('÷') == -1 && upperDisplayedNumbers.indexOf('x') == -1 && upperDisplayedNumbers.indexOf('=') == -1
         ) && displayedNumbers2 == 0){
             screentext.className = 'screentext';
-            if (this.textContent != '.' && this.textContent != 0){
+            if (this.textContent != '.'){
+                if (this.textContent > 0 || this.textContent < 0){
                 displayedNumbers += this.textContent
                 screentext.textContent = displayedNumbers;
                 counter += 1;
                 val1 = parseFloat(displayedNumbers);
+                } else if (this.textContent == 0 && displayedNumbers.length == 0){
+                val1 = 0;
+                counter += 1;
+                val1 = parseFloat(displayedNumbers);
+                } else if (this.textContent == 0 && displayedNumbers >= 1) {
+                    displayedNumbers += this.textContent
+                    screentext.textContent = displayedNumbers;
+                    counter += 1;
+                    val1 = parseFloat(displayedNumbers);
+                }
+                
             } else if (this.textContent == '.' && displayedNumbers.indexOf(".") == -1 && displayedNumbers != ''){
                 displayedNumbers += this.textContent
                 screentext.textContent = displayedNumbers;
