@@ -10,6 +10,8 @@ const deleteButton = document.querySelector("#deleteButton");
 let value1 = '0';
 let value2 = '0';
 let operator = '';
+let result = '';
+
 
 
 screentext.textContent = value1; 
@@ -21,54 +23,124 @@ function populateScreen(value) { // this function works with the numbers that po
 }
 
 function populateUpperScreen(value) { // this functions works with the inputs from value1, valu2, and value3 to display the operation process.
-    if (value == value1 || value == operator) { // this condition makes sure that we add value1 and the operator symbol to the upper display
-    let upperScreenvalue1 = parseFloat(value1);
-    upperscreen.textContent += (upperScreenvalue1 + value);
-    } else if (value == value2) {
-    let upperScreenvalue2 = parseFloat(value2);
-    upperscreen.textContent += (upperScreenvalue2 + ' = ')
-    }
-    
+   upperscreen.textContent = value;
     
 }
 
+function operationProcess(value) {
+    let process = '';
+    if (operator != '' && value2 == '0' && result == ''){
+    process += (parseFloat(value1) + value);
+    populateUpperScreen(process);
+    } else if (value2 != '0'){
+        process += (parseFloat(value1) + operator + parseFloat(value2) + ' = ');
+        populateUpperScreen(process);
+    } else if (value1 == '0' && operator == ''){
+        process += (parseFloat(value1) + ' = ');
+        populateUpperScreen(process);
+    } else if (value1 != '0' && value2 == '0' ){
+        process += (parseFloat(value1) + ' = ');
+        populateUpperScreen(process); 
+    } else {
+        process += (parseFloat(value1) + operator);
+        populateUpperScreen(process);
+    }
+    
+
+}
+
 function getValue() {
-    if (this.textContent == 0 && operator == ''){ // this is a safeguard if the user tries to start his operation with a zero.
+    resetValues();
+    if (this.textContent == 0 && operator == '' && value1 == '0'){ // this is a safeguard if the user tries to start his operation with a zero.
         value1 = 0;
         populateScreen(value1);
-    } else if (operator == ''){ // if the operator is empty, it means it's the first value
+    } else if (value2 == '0' && operator == ''){ // if the operator is empty, it means it's the first value
         let value = '';
         value += this.textContent;
         value1 += value;
         populateScreen(value1);
         console.log(`${this.textContent} value1 clicked`);
-    } else if (operator != ''){ // if the operator is not empty, it means we should introduce the second value.
+    } else if (value2 != ''){ // if the operator is not empty, it means we should introduce the second value.
         let value = '';
         value += this.textContent;
         value2 += value;
         populateScreen(value2)
         console.log(`${this.textContent} value2 clicked`);
-    }
+    } 
+
    
     
 }
 
 
 
-function saveOperator() {
+function getOperator() {
     let value = '';
     value += this.textContent;
     if (operator == ''){
          operator += value;
-         populateUpperScreen(value);
-          console.log(`${this.textContent} clicked`);
+        operationProcess(value);
+        console.log(`${this.textContent} clicked`);
+    } else if (operator != '' && value2 != '0'){
+        symbolOperate();
+        operator = value;
+        operationProcess(value); // this updates the upperscreen with the new entered operator
+    } else if (operator != ''){
+        operator = this.textContent;
+        operationProcess(operator);
     }
+
 }
 
 function equalOperate(){
-    let result = operate(value1, operator, value2);
+    if (value1 != '0' && value2 != '0'){
+    result = operate(value1, operator, value2);
     populateScreen(result);
-    populateUpperScreen(value2); // sends the second value to be appended to the upper screen
+    operationProcess(value2); // sends the second value to be appended to the upper screen
+    } else if (value1 != '0' && value2 == '0' && operator != '') {
+        value2 = value1;
+        result = operate(value1, operator, value2);
+        populateScreen(result);
+        operationProcess(value2);
+    } else if (value1 != '0' && value2 == '0'){
+        populateScreen(value1);
+        operationProcess(value1);
+    } else {
+    value1 = 0;
+    populateScreen(value1);
+    operationProcess(value1);
+    }
+   
+}
+
+function symbolOperate(){
+    result = operate(value1, operator, value2);
+    let value = '';
+    value1 = result;
+    result = '';
+    value += value1;
+    populateScreen(value1);
+    value2 = '0';
+    operationProcess(value1);
+    console.log(`${this.textContent} operator clicked`);
+
+}
+
+
+function resetValues() { // this reset all values to start a new operation, just when all the respective values are already 
+// define meaning the operation is complete
+    if (value1 != '0' && value2 != '0' && result != ''){
+    value1 = '0';                              
+    value2 = '0'; 
+    operator = '';  
+    result = '';
+    upperscreen.textContent = '';
+    screentext.textContent = '';
+    } else if (value1 == 0 && value2 == 0 && result == '') {
+    upperscreen.textContent = '';
+    screentext.textContent = '';
+    }
+   
 }
 
 numberButtons.forEach(pressNumber);
@@ -82,7 +154,7 @@ function pressNumber(button) {
 }
 
 function pressOperator(button) {
-    button.addEventListener("click", saveOperator);
+    button.addEventListener("click", getOperator);
 }
 
 equalButton.addEventListener("click", equalOperate);
