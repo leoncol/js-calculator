@@ -1,29 +1,91 @@
 const numberButtons = document.querySelectorAll(".number-button");
 const operationButtons = document.querySelectorAll(".operation-button");
-const equalButton = document.querySelector("equal-button");
+const equalButton = document.querySelector("#equal");
 const decimalButton = document.querySelector(".decimal-button");
 const screentext = document.querySelector(".screentext");
 const upperscreen = document.querySelector(".upperscreen");
 const deleteButton = document.querySelector("#deleteButton");
 
-let value1 = 0;
-let value2 = 0;
+
+let value1 = '0';
+let value2 = '0';
 let operator = '';
 
-function populateScreen() {
-    screentext.textContent = this.textContent;
-    console.log(`${this.textContent} clicked`);
+
+screentext.textContent = value1; 
+
+function populateScreen(value) { // this function works with the numbers that populate the main screen.
+    screentext.textContent = '';
+    screentext.textContent += parseFloat(value);
+   
 }
 
-numberButtons.forEach(pressNumber);
+function populateUpperScreen(value) { // this functions works with the inputs from value1, valu2, and value3 to display the operation process.
+    if (value == value1 || value == operator) { // this condition makes sure that we add value1 and the operator symbol to the upper display
+    let upperScreenvalue1 = parseFloat(value1);
+    upperscreen.textContent += (upperScreenvalue1 + value);
+    } else if (value == value2) {
+    let upperScreenvalue2 = parseFloat(value2);
+    upperscreen.textContent += (upperScreenvalue2 + ' = ')
+    }
+    
+    
+}
 
-function pressNumber(button) {
-    button.addEventListener("click", populateScreen);
+function getValue() {
+    if (this.textContent == 0 && operator == ''){ // this is a safeguard if the user tries to start his operation with a zero.
+        value1 = 0;
+        populateScreen(value1);
+    } else if (operator == ''){ // if the operator is empty, it means it's the first value
+        let value = '';
+        value += this.textContent;
+        value1 += value;
+        populateScreen(value1);
+        console.log(`${this.textContent} value1 clicked`);
+    } else if (operator != ''){ // if the operator is not empty, it means we should introduce the second value.
+        let value = '';
+        value += this.textContent;
+        value2 += value;
+        populateScreen(value2)
+        console.log(`${this.textContent} value2 clicked`);
+    }
+   
     
 }
 
 
 
+function saveOperator() {
+    let value = '';
+    value += this.textContent;
+    if (operator == ''){
+         operator += value;
+         populateUpperScreen(value);
+          console.log(`${this.textContent} clicked`);
+    }
+}
+
+function equalOperate(){
+    let result = operate(value1, operator, value2);
+    populateScreen(result);
+    populateUpperScreen(value2); // sends the second value to be appended to the upper screen
+}
+
+numberButtons.forEach(pressNumber);
+
+operationButtons.forEach(pressOperator);
+
+function pressNumber(button) {
+    button.addEventListener("click", getValue);
+    
+    
+}
+
+function pressOperator(button) {
+    button.addEventListener("click", saveOperator);
+}
+
+equalButton.addEventListener("click", equalOperate);
 
 
 
@@ -98,13 +160,15 @@ const divide = function(num1, num2){
 
 
 const operate = function(num1, operator, num2){
-    if (operator == '+'){
+    num1 = parseFloat(value1);
+    num2 = parseFloat(value2);
+    if (operator == ' + '){
         return add(num1, num2);
-    } else if (operator == '-'){
-        return subtract(num1, num2);
-    } else if (operator == '*'){
+    } else if (operator == ' - '){
+        return substract(num1, num2);
+    } else if (operator == ' × '){
         return multiply(num1, num2);
-    } else if (operator == '÷'){
+    } else if (operator == ' ÷ '){
         return divide(num1, num2);
     } else {
         return 'Insert a valid operator!'

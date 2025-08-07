@@ -106,6 +106,7 @@ height: 100px;
 justify-content: end;
 align-items: end;
 flex-direction: column;
+overflow: hidden;
 
 }
 
