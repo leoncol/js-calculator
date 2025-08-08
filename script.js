@@ -14,11 +14,20 @@ let result = '';
 
 
 
+deleteButton.addEventListener("click", (resetValues));
+
 screentext.textContent = value1; 
 
 function populateScreen(value) { // this function works with the numbers that populate the main screen.
+    if (value == "Can't divide by zero."){
+    screentext.textContent = '';
+    screentext.className = 'message';
+    screentext.textContent += value;
+    } else {
     screentext.textContent = '';
     screentext.textContent += parseFloat(value);
+   
+    }
    
 }
 
@@ -135,10 +144,20 @@ function resetValues() { // this reset all values to start a new operation, just
     operator = '';  
     result = '';
     upperscreen.textContent = '';
+    screentext.className = 'screentext';
     screentext.textContent = '';
     } else if (value1 == 0 && value2 == 0 && result == '') {
+    screentext.className = 'screentext';
     upperscreen.textContent = '';
     screentext.textContent = '';
+    } else if (this.textContent == 'C') {
+        value1 = '0';                              
+        value2 = '0'; 
+        operator = '';  
+        result = '';
+        screentext.className = 'screentext';
+        upperscreen.textContent = '';
+        screentext.textContent = value1;
     }
    
 }
@@ -202,21 +221,21 @@ screentext.className = 'screentext';
 const add = function(num1, num2) {
     let result = 0;
     result = num1 + num2;
-    return result;
+    return checkDecimal(result);
   
 };
   
 const substract = function(num1, num2) {
     let result = 0;
     result = num1 - num2;
-    return result;
+    return checkDecimal(result);
 };
   
 
 const multiply = function(num1, num2) {
     let result = 0;
     result = num1 * num2;
-    return result;
+    return checkDecimal(result);
 };
 
 const divide = function(num1, num2){
@@ -225,7 +244,7 @@ const divide = function(num1, num2){
     if (result == Infinity){
         return "Can't divide by zero."
     } else {
-        return result;
+        return checkDecimal(result);
     }
 };
 
@@ -242,11 +261,16 @@ const operate = function(num1, operator, num2){
         return multiply(num1, num2);
     } else if (operator == ' ÷ '){
         return divide(num1, num2);
-    } else {
-        return 'Insert a valid operator!'
-    }
+    } 
+
 }
 
 
 
-deleteButton.addEventListener("click", clearScreen);
+
+function testButton () {
+    console.log(this.textContent);
+}
+
+
+
