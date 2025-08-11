@@ -10,19 +10,27 @@ const deleteButton = document.querySelector("#deleteButton");
 let value1 = '0';
 let value2 = '0';
 let operator = '';
+let process = '';
 let result = '';
 
 
 
-deleteButton.addEventListener("click", (resetValues));
+
+decimalButton.addEventListener("click", getValue);
+deleteButton.addEventListener("click", resetValues);
 
 screentext.textContent = value1; 
 
 function populateScreen(value) { // this function works with the numbers that populate the main screen.
+    value = value.toString();
     if (value == "Can't divide by zero."){
+    upperscreen.textContent = '';
     screentext.textContent = '';
     screentext.className = 'message';
     screentext.textContent += value;
+    } else if (value.indexOf('.') >= 0){
+        screentext.textContent = '';
+        screentext.textContent += value;
     } else {
     screentext.textContent = '';
     screentext.textContent += parseFloat(value);
@@ -37,20 +45,19 @@ function populateUpperScreen(value) { // this functions works with the inputs fr
 }
 
 function operationProcess(value) {
-    let process = '';
-    if (operator != '' && value2 == '0' && result == ''){
-    process += (parseFloat(value1) + value);
+    if (operator != '' && value2 == '0' && result == '' && process.indexOf(operator) == -1){
+    process = (parseFloat(value1) + value);
     populateUpperScreen(process);
     } else if (value2 != '0'){
-        process += (parseFloat(value1) + operator + parseFloat(value2) + ' = ');
+        process += (parseFloat(value2) + ' = ');
         populateUpperScreen(process);
     } else if (value1 == '0' && operator == ''){
         process += (parseFloat(value1) + ' = ');
         populateUpperScreen(process);
-    } else if (value1 != '0' && value2 == '0' ){
-        process += (parseFloat(value1) + ' = ');
+    } else if (value1 != '0' && value2 == '0' && operator == '' ){
+        process = (parseFloat(value1) + ' = ');
         populateUpperScreen(process); 
-    } else {
+    } else if (process.indexOf(operator) == -1) {
         process += (parseFloat(value1) + operator);
         populateUpperScreen(process);
     }
@@ -62,23 +69,44 @@ function getValue() {
     resetValues();
     if (this.textContent == 0 && operator == '' && value1 == '0'){ // this is a safeguard if the user tries to start his operation with a zero.
         value1 = 0;
+        if (this.textContent == '.') {
+            value1 = addDecimal(value1);
+        }
         populateScreen(value1);
     } else if (value2 == '0' && operator == ''){ // if the operator is empty, it means it's the first value
         let value = '';
-        value += this.textContent;
-        value1 += value;
+         if (this.textContent == '.') {
+            value1 = addDecimal(value1);
+        } else {
+             value += this.textContent;
+            value1 += value;
+        }
         populateScreen(value1);
-        console.log(`${this.textContent} value1 clicked`);
     } else if (value2 != ''){ // if the operator is not empty, it means we should introduce the second value.
         let value = '';
-        value += this.textContent;
-        value2 += value;
+         if (this.textContent == '.') {
+            value2 = addDecimal(value2);
+        } else {
+            value += this.textContent;
+            value2 += value;
+        }
         populateScreen(value2)
-        console.log(`${this.textContent} value2 clicked`);
     } 
 
    
     
+}
+
+
+function addDecimal(value){
+    value = value.toString();
+    if (value.indexOf('.') == -1){
+        value = parseFloat(value);
+        value = value + '.';
+        return value
+    } else {
+        return value
+    }
 }
 
 
@@ -89,7 +117,6 @@ function getOperator() {
     if (operator == ''){
          operator += value;
         operationProcess(value);
-        console.log(`${this.textContent} clicked`);
     } else if (operator != '' && value2 != '0'){
         symbolOperate();
         operator = value;
@@ -102,19 +129,23 @@ function getOperator() {
 }
 
 function equalOperate(){
-    if (value1 != '0' && value2 != '0'){
+    if (value1 != '0'  && value2 != '0' && process.indexOf('=') == -1){
     result = operate(value1, operator, value2);
-    populateScreen(result);
-    operationProcess(value2); // sends the second value to be appended to the upper screen
-    } else if (value1 != '0' && value2 == '0' && operator != '') {
+        if (result == "Can't divide by zero."){
+            populateScreen(result);
+        } else {
+            populateScreen(result);
+            operationProcess(value2); // sends the second value to be appended to the upper screen
+        }
+    } else if (value1 != '0' && value2 == '0' && operator != '' && process.indexOf('=') == -1) {
         value2 = value1;
         result = operate(value1, operator, value2);
         populateScreen(result);
         operationProcess(value2);
-    } else if (value1 != '0' && value2 == '0'){
+    } else if (value1 != '0' && value2 == '0' && process.indexOf('=') == -1){
         populateScreen(value1);
         operationProcess(value1);
-    } else {
+    } else if (process.indexOf('=') == -1) {
     value1 = 0;
     populateScreen(value1);
     operationProcess(value1);
@@ -131,30 +162,57 @@ function symbolOperate(){
     populateScreen(value1);
     value2 = '0';
     operationProcess(value1);
-    console.log(`${this.textContent} operator clicked`);
+
 
 }
 
 
 function resetValues() { // this reset all values to start a new operation, just when all the respective values are already 
 // define meaning the operation is complete
-    if (value1 != '0' && value2 != '0' && result != ''){
+    if (this.textContent != 'C' && value1 != '0' && value2 != '0' && result != ''){
     value1 = '0';                              
     value2 = '0'; 
     operator = '';  
     result = '';
+    process = '';
     upperscreen.textContent = '';
     screentext.className = 'screentext';
     screentext.textContent = '';
-    } else if (value1 == 0 && value2 == 0 && result == '') {
-    screentext.className = 'screentext';
+    } else if (this.textContent != 'C' && value1 == '0' && value2 != '0' && result == 0 && operator != '' && process.indexOf(' = ') >= 0) {
+ value1 = '0';                              
+    value2 = '0'; 
+    operator = '';  
+    result = '';
+    process = '';
     upperscreen.textContent = '';
-    screentext.textContent = '';
-    } else if (this.textContent == 'C') {
+    screentext.className = 'screentext';
+    } 
+    else if (this.textContent != 'C' && value1 != '0.' && value1 == 0 && value2 == 0 && result == '') {
+
+     value1 = '0';                              
+        value2 = '0'; 
+        operator = '';  
+        result = '';
+        process = '';
+     screentext.className = 'screentext';
+     upperscreen.textContent = '';
+     screentext.textContent = '';
+    } else if (value2 == 0 && result == '' && process.indexOf('=') >= 0) {
         value1 = '0';                              
         value2 = '0'; 
         operator = '';  
         result = '';
+        process = '';
+     screentext.className = 'screentext';
+     upperscreen.textContent = '';
+     screentext.textContent = '';
+    }
+        else if (this.textContent == 'C') {
+        value1 = '0';                              
+        value2 = '0'; 
+        operator = '';  
+        result = '';
+        process = '';
         screentext.className = 'screentext';
         upperscreen.textContent = '';
         screentext.textContent = value1;
@@ -198,24 +256,6 @@ const checkDecimal = function(number) {
     
 }
 
-
-
-const clearScreen = function() {
-     displayedNumbers = '';
-     displayedNumbers2 = '';
-     upperDisplayedNumbers = '';
-     displayResult = '';
-     counter = 0;
-     upperCounter = 0;
-     val1 = 0;
-     val2 = 0;
-     symbol = '';
-     result = 0;
-screentext.textContent = val1;
-upperscreen.textContent = upperDisplayedNumbers;
-screentext.className = 'screentext';
-
-};
 
 
 const add = function(num1, num2) {
@@ -266,11 +306,6 @@ const operate = function(num1, operator, num2){
 }
 
 
-
-
-function testButton () {
-    console.log(this.textContent);
-}
 
 
 
